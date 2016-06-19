@@ -14,6 +14,7 @@ contract PetTracker{
     //Attribute[] public attributes;
     mapping(bytes32=> mapping(uint=> Attribute) ) public pet; // hash of pet id to array of attributes
     mapping(bytes32=> uint) public trackNumberRecords; //number of records that a given pet has
+    event attributeAdded(bytes32 _petid, PossibleAttributes _type, string _attribute);
     function addAttribute(bytes32 _petid, PossibleAttributes _type, string _attribute){
       if(trackNumberRecords[_petid]>0){
         pet[_petid][trackNumberRecords[_petid]]=Attribute(now, _type, _attribute);
@@ -24,6 +25,7 @@ contract PetTracker{
         
         pet[_petid][0]=Attribute(now, _type, _attribute);
       }
+      attributeAdded(_petid, _type, _attribute);
       
     }
 
