@@ -101,7 +101,7 @@
 	//web3.eth.defaultAccount = '0x8bfFa25d87Eb8744dC3C2534B496fBa010bC61b9';
 	console.log(web3.eth.accounts);
 	web3.eth.defaultAccount = web3.eth.accounts[1];
-	var contract = web3.eth.contract(abi).at('0xb7190e2db4205EDba6c1957345DAA69d6693DC0b');
+	var contract = web3.eth.contract(abi).at('0x590Ab2750495F2c141794Ca36f153c299DD5f2fb');
 	
 	//events work but possibly not needed in this applciation
 	/*var f2 = contract.allEvents();
@@ -211,6 +211,7 @@
 	                console.log(err);
 	                console.log(results);
 	            } else {
+	                console.log(results);
 	                alert("Transaction Complete!");
 	                self.getHistoricalResults();
 	            }
