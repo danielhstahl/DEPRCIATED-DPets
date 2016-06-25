@@ -92,7 +92,7 @@
 	var Web3 = __webpack_require__(/*! web3 */ 330);
 	//const {Grid, Row, Col} = require('react-flexbox-grid');
 	
-	var abi = [{ "constant": true, "inputs": [{ "name": "", "type": "bytes32" }], "name": "trackNumberRecords", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "bytes32" }, { "name": "", "type": "uint256" }], "name": "pet", "outputs": [{ "name": "timestamp", "type": "uint256" }, { "name": "typeAttribute", "type": "uint8" }, { "name": "attributeText", "type": "string" }], "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "type": "function" }, { "constant": true, "inputs": [], "name": "costToAdd", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "_petid", "type": "bytes32" }, { "name": "_type", "type": "uint8" }, { "name": "_attribute", "type": "string" }], "name": "addAttribute", "outputs": [], "type": "function" }, { "inputs": [], "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_petid", "type": "bytes32" }, { "indexed": false, "name": "_type", "type": "PetTracker.PossibleAttributes" }, { "indexed": false, "name": "_attribute", "type": "string" }], "name": "attributeAdded", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_petid", "type": "bytes32" }, { "indexed": false, "name": "error", "type": "string" }], "name": "attributeError", "type": "event" }];
+	var abi = [{ "constant": true, "inputs": [{ "name": "", "type": "bytes32" }], "name": "trackNumberRecords", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "type": "function" }, { "constant": false, "inputs": [], "name": "getRevenue", "outputs": [], "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "bytes32" }, { "name": "", "type": "uint256" }], "name": "pet", "outputs": [{ "name": "timestamp", "type": "uint256" }, { "name": "typeAttribute", "type": "uint8" }, { "name": "attributeText", "type": "string" }], "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "type": "function" }, { "constant": true, "inputs": [], "name": "costToAdd", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "_petid", "type": "bytes32" }, { "name": "_type", "type": "uint8" }, { "name": "_attribute", "type": "string" }], "name": "addAttribute", "outputs": [], "type": "function" }, { "inputs": [], "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_petid", "type": "bytes32" }, { "indexed": false, "name": "_type", "type": "PetTracker.PossibleAttributes" }, { "indexed": false, "name": "_attribute", "type": "string" }], "name": "attributeAdded", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_petid", "type": "bytes32" }, { "indexed": false, "name": "error", "type": "string" }], "name": "attributeError", "type": "event" }];
 	//var sandboxId = '9f51d5ec41'; //this changes
 	//var url='https://phillyfan1138.by.ether.camp:8555/sandbox/' + sandboxId;
 	var port = 8545;
@@ -100,8 +100,8 @@
 	var web3 = new Web3(new Web3.providers.HttpProvider(url));
 	//web3.eth.defaultAccount = '0x8bfFa25d87Eb8744dC3C2534B496fBa010bC61b9';
 	console.log(web3.eth.accounts);
-	web3.eth.defaultAccount = web3.eth.accounts[1];
-	var contract = web3.eth.contract(abi).at('0xa9c182b1a1cE19120Ff497320bFe17b4Bb8e056a');
+	web3.eth.defaultAccount = web3.eth.accounts[0];
+	var contract = web3.eth.contract(abi).at('0x99170Ec2399190ba1f48337674f08DA9b62Ae47a');
 	
 	//events work but possibly not needed in this applciation
 	/*var f2 = contract.allEvents();
@@ -172,7 +172,8 @@
 	            attributeValue: "",
 	            petId: 0,
 	            currentData: null,
-	            historicalData: null
+	            historicalData: null,
+	            isCreator: contract.isOwner() //web3.eth.defaultAccount==contract.owner()//make this a call to the actual contract later
 	        };
 	    },
 	
@@ -204,8 +205,16 @@
 	    },
 	    addAttribute: function addAttribute() {
 	        var self = this;
-	        contract.addAttribute.sendTransaction(this.state.petId, this.state.attributeType, this.state.attributeValue, { gas: 3000000 }, function (err, results) {
-	
+	        console.log(contract.costToAdd());
+	        console.log(web3.eth.getBalance(web3.eth.defaultAccount).toString());
+	        if (contract.costToAdd().greaterThan(web3.eth.getBalance(web3.eth.defaultAccount))) {
+	            alert("Not enough Ether!");
+	            return;
+	        }
+	        //var value=web3.toWei(contract.costToAdd().c[0], 'finney');//temporary
+	        //console.log(value);
+	        //var value=web3.toWei(1, 'ether'); //temporary!!
+	        contract.addAttribute.sendTransaction(this.state.petId, this.state.attributeType, this.state.attributeValue, { value: contract.costToAdd() /*contract.costToAdd()*/, gas: 3000000 }, function (err, results) {
 	            if (err) {
 	                //alert("Error: "+err);
 	                console.log(err);
@@ -256,6 +265,10 @@
 	                attributeValue: event.target.value
 	            });
 	        }
+	    },
+	    claimReward: function claimReward() {
+	        contract.getRevenue();
+	        alert("Reward Claimed");
 	    },
 	    render: function render() {
 	        var self = this;
@@ -311,11 +324,18 @@
 	                        'Search Historical Records'
 	                    ),
 	                    this.state.historicalData && this.state.historicalData[0] ? _react2.default.createElement(CustomTable, { data: this.state.historicalData, columns: Object.keys(this.state.historicalData[0]) }) : null
-	                )
+	                ),
+	                this.state.isCreator ? _react2.default.createElement(
+	                    _RaisedButton2.default,
+	                    { onMouseDown: this.claimReward },
+	                    'Claim Reward [Currently ',
+	                    contract.collectedRevenue().toString(),
+	                    ']'
+	                ) : null
 	            )
 	        );
 	    }
-	});
+	}); /**/
 	_reactDom2.default.render(_react2.default.createElement(Main, null), document.getElementById("app"));
 
 /***/ },
