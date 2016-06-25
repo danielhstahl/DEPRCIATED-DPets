@@ -19,7 +19,7 @@ var web3 = new Web3(new Web3.providers.HttpProvider(url));
 //web3.eth.defaultAccount = '0x8bfFa25d87Eb8744dC3C2534B496fBa010bC61b9';
 console.log(web3.eth.accounts);
 web3.eth.defaultAccount=web3.eth.accounts[1];
-var contract = web3.eth.contract(abi).at('0x2d5A1358CeBE253BB0cF5Ed9963C879e696C44eA');
+var contract = web3.eth.contract(abi).at('0xad4Bac1f6CA345D3Bd6757B07d83AcDEf4195FB9');
 
 //events work but possibly not needed in this applciation
 /*var f2 = contract.allEvents();
