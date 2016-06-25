@@ -101,7 +101,7 @@
 	//web3.eth.defaultAccount = '0x8bfFa25d87Eb8744dC3C2534B496fBa010bC61b9';
 	console.log(web3.eth.accounts);
 	web3.eth.defaultAccount = web3.eth.accounts[1];
-	var contract = web3.eth.contract(abi).at('0xad4Bac1f6CA345D3Bd6757B07d83AcDEf4195FB9');
+	var contract = web3.eth.contract(abi).at('0xa9c182b1a1cE19120Ff497320bFe17b4Bb8e056a');
 	
 	//events work but possibly not needed in this applciation
 	/*var f2 = contract.allEvents();

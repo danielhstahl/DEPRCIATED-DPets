@@ -26,10 +26,11 @@ contract PetTracker{
         return;
       }
       if(owner!=msg.sender){
-        if(!owner.send(costToAdd)){
+        owner.call.value(costToAdd); //in future this will call a contract which disburses funds to addresses in some equitable manner (the owners!)
+        /*if(!owner.send(costToAdd)){
           attributeError(_petid, "Ether not sent");
           return;
-        }
+        }*/
       }
       if(trackNumberRecords[_petid]>0){
         pet[_petid][trackNumberRecords[_petid]]=Attribute(now, _type, _attribute);
