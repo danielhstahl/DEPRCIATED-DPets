@@ -93,12 +93,15 @@
 	//const {Grid, Row, Col} = require('react-flexbox-grid');
 	
 	var abi = [{ "constant": true, "inputs": [{ "name": "", "type": "bytes32" }], "name": "trackNumberRecords", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "bytes32" }, { "name": "", "type": "uint256" }], "name": "pet", "outputs": [{ "name": "timestamp", "type": "uint256" }, { "name": "typeAttribute", "type": "uint8" }, { "name": "attributeText", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "_petid", "type": "bytes32" }, { "name": "_type", "type": "uint8" }, { "name": "_attribute", "type": "string" }], "name": "addAttribute", "outputs": [], "type": "function" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "_petid", "type": "bytes32" }, { "indexed": false, "name": "_type", "type": "Medical.PossibleAttributes" }, { "indexed": false, "name": "_attribute", "type": "string" }], "name": "attributeAdded", "type": "event" }];
-	var sandboxId = '9f51d5ec41'; //this changes
-	var url = 'https://phillyfan1138.by.ether.camp:8555/sandbox/' + sandboxId;
+	//var sandboxId = '9f51d5ec41'; //this changes
+	//var url='https://phillyfan1138.by.ether.camp:8555/sandbox/' + sandboxId;
+	var port = 8545;
+	var url = 'http://localhost:' + port;
 	var web3 = new Web3(new Web3.providers.HttpProvider(url));
-	web3.eth.defaultAccount = '0xdedb49385ad5b94a16f236a6890cf9e0b1e30392';
-	
-	var contract = web3.eth.contract(abi).at('0x17956ba5f4291844bc25aedb27e69bc11b5bda39');
+	//web3.eth.defaultAccount = '0x8bfFa25d87Eb8744dC3C2534B496fBa010bC61b9';
+	console.log(web3.eth.accounts);
+	web3.eth.defaultAccount = web3.eth.accounts[1];
+	var contract = web3.eth.contract(abi).at('0xb7190e2db4205EDba6c1957345DAA69d6693DC0b');
 	
 	//events work but possibly not needed in this applciation
 	/*var f2 = contract.allEvents();
@@ -202,8 +205,11 @@
 	    addAttribute: function addAttribute() {
 	        var self = this;
 	        contract.addAttribute.sendTransaction(this.state.petId, this.state.attributeType, this.state.attributeValue, { gas: 3000000 }, function (err, results) {
+	
 	            if (err) {
-	                alert("Error: " + err);
+	                //alert("Error: "+err);
+	                console.log(err);
+	                console.log(results);
 	            } else {
 	                alert("Transaction Complete!");
 	                self.getHistoricalResults();
