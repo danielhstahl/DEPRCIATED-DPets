@@ -10,7 +10,7 @@ import {Table, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, TableBo
 //const {Grid, Row, Col} = require('react-flexbox-grid');
 import Paper from 'material-ui/Paper';
 import MyRawTheme from 'theme';
-var abi =[{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"trackNumberRecords","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"}],"name":"pet","outputs":[{"name":"timestamp","type":"uint256"},{"name":"typeAttribute","type":"uint8"},{"name":"attributeText","type":"string"}],"type":"function"},{"constant":false,"inputs":[{"name":"_petid","type":"bytes32"},{"name":"_type","type":"uint8"},{"name":"_attribute","type":"string"}],"name":"addAttribute","outputs":[],"type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_petid","type":"bytes32"},{"indexed":false,"name":"_type","type":"Medical.PossibleAttributes"},{"indexed":false,"name":"_attribute","type":"string"}],"name":"attributeAdded","type":"event"}];
+var abi =[{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"trackNumberRecords","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"kill","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"}],"name":"pet","outputs":[{"name":"timestamp","type":"uint256"},{"name":"typeAttribute","type":"uint8"},{"name":"attributeText","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":true,"inputs":[],"name":"costToAdd","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_petid","type":"bytes32"},{"name":"_type","type":"uint8"},{"name":"_attribute","type":"string"}],"name":"addAttribute","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_petid","type":"bytes32"},{"indexed":false,"name":"_type","type":"PetTracker.PossibleAttributes"},{"indexed":false,"name":"_attribute","type":"string"}],"name":"attributeAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_petid","type":"bytes32"},{"indexed":false,"name":"error","type":"string"}],"name":"attributeError","type":"event"}];
 //var sandboxId = '9f51d5ec41'; //this changes
 //var url='https://phillyfan1138.by.ether.camp:8555/sandbox/' + sandboxId; 
 var port=8545;
@@ -19,7 +19,7 @@ var web3 = new Web3(new Web3.providers.HttpProvider(url));
 //web3.eth.defaultAccount = '0x8bfFa25d87Eb8744dC3C2534B496fBa010bC61b9';
 console.log(web3.eth.accounts);
 web3.eth.defaultAccount=web3.eth.accounts[1];
-var contract = web3.eth.contract(abi).at('0x590Ab2750495F2c141794Ca36f153c299DD5f2fb');
+var contract = web3.eth.contract(abi).at('0x2d5A1358CeBE253BB0cF5Ed9963C879e696C44eA');
 
 //events work but possibly not needed in this applciation
 /*var f2 = contract.allEvents();
@@ -115,6 +115,16 @@ const Main=React.createClass({
                 console.log(results);
                 alert("Transaction Complete!");
                 self.getHistoricalResults();
+            }
+        });
+        contract.attributeError({_petid:this.state.petId}, function(error, result){
+            if (!error){
+                console.log(result);
+            }
+        });
+        contract.attributeAdded({_petid:this.state.petId}, function(error, result){
+            if (!error){
+                console.log(result);
             }
         });
     },
