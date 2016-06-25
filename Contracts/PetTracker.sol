@@ -26,7 +26,7 @@ contract PetTracker{
     function PetTracker(){ //owner is creator of contract
       owner=msg.sender;
     }
-    function isOwner() return(bool){
+    function isOwner() returns(bool){
       return msg.sender==owner;
     }
     mapping(bytes32=> mapping(uint=> Attribute) ) public pet; // hash of pet id to array of attributes
@@ -45,11 +45,6 @@ contract PetTracker{
         if(excess>0){
           msg.sender.send(excess);
         }
-        //owner.call.value(costToAdd)(); //in future this will call a contract which disburses funds to addresses in some equitable manner (the owners!)
-        /*if(!owner.send(costToAdd)){
-          attributeError(_petid, "Ether not sent");
-          return;
-        }*/
       }
       if(trackNumberRecords[_petid]>0){ //if pet already exists in the blockchain
         pet[_petid][trackNumberRecords[_petid]]=Attribute(now, _type, _attribute);
