@@ -192,18 +192,12 @@
 	    },
 	    addAttribute: function addAttribute() {
 	        var self = this;
-	        console.log(contract.costToAdd());
-	        console.log(web3.eth.getBalance(web3.eth.defaultAccount).toString());
 	        if (contract.costToAdd().greaterThan(web3.eth.getBalance(web3.eth.defaultAccount))) {
 	            alert("Not enough Ether!");
 	            return;
 	        }
-	        //var value=web3.toWei(contract.costToAdd().c[0], 'finney');//temporary
-	        //console.log(value);
-	        //var value=web3.toWei(1, 'ether'); //temporary!!
-	        contract.addAttribute.sendTransaction(this.state.petId, this.state.attributeType, this.state.attributeValue, { value: contract.costToAdd() /*contract.costToAdd()*/, gas: 3000000 }, function (err, results) {
+	        contract.addAttribute.sendTransaction(this.state.petId, this.state.attributeType, this.state.attributeValue, { value: contract.costToAdd(), gas: 3000000 }, function (err, results) {
 	            if (err) {
-	                //alert("Error: "+err);
 	                console.log(err);
 	                console.log(results);
 	            } else {
