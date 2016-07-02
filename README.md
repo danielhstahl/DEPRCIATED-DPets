@@ -1,3 +1,5 @@
+THIS REMOTE IS OLD AND IS ONLY RETAINED FOR HISTORICAL PURPOSES
+
 Prereq: download and install geth and add it to your path.  Add at least one account.  This process is described here:
 https://github.com/ethereum/go-ethereum/wiki/geth.  Also requires nodejs https://nodejs.org/en/.  
 
